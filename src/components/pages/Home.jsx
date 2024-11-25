@@ -1,6 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  // Mock function to check if user is logged in
+  const isUserLoggedIn = () => {
+    // Replace this with your actual authentication logic (e.g., checking token in localStorage)
+    return localStorage.getItem("authToken") ? true : false;
+  };
+
   const [complaint, setComplaint] = useState({
     title: "",
     description: "",
@@ -15,9 +24,15 @@ const Home = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!isUserLoggedIn()) {
+      alert("Please log in to submit a complaint.");
+      navigate("/login");
+      return;
+    }
+
     console.log("Complaint Submitted:", complaint);
     // Add backend integration logic here
-
 
     setComplaint({
       title: "",
