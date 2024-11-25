@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { complaints } from "../data/sampleData";
 import { useNavigate } from "react-router-dom";
 import { IoLogOut } from "react-icons/io5";
+import API from "../utils/api"; // Assuming this is your API utility for making requests
 
 function AdminPage() {
   const [filter, setFilter] = useState("");
-  const [filteredComplaints, setFilteredComplaints] = useState(complaints);
+  const [filteredComplaints, setFilteredComplaints] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [status, setStatus] = useState("");
-
+  
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -22,7 +22,7 @@ function AdminPage() {
     const value = e.target.value;
     setFilter(value);
     setFilteredComplaints(
-      complaints.filter(
+      filteredComplaints.filter(
         (complaint) =>
           complaint.status.includes(value) || complaint.priority.includes(value)
       )
@@ -40,76 +40,89 @@ function AdminPage() {
     setSelectedComplaint(null);
   };
 
-  // const handleUpdate = async () => {
-  //   // Example API call to update complaint details
-  //   try {
-  //     const response = await fetch(`/api/complaints/${selectedComplaint.id}`, {
-  //       method: "PUT",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ status }),
-  //     });
+  const handleUpdate = async () => {
+    if (!selectedComplaint || !selectedComplaint._id) {
+      alert("Complaint ID is missing");
+      return;
+    }
+  
+    try {
+      // Send the update request with the valid complaint ID
+      await API.put(`/complaint/${selectedComplaint._id}`, { status });
+      alert('Complaint updated successfully!');
+      
+      // Update the local state to reflect the change
+      setFilteredComplaints((prev) =>
+        prev.map((c) =>
+          c._id === selectedComplaint._id ? { ...c, status } : c
+        )
+      );
+      handleCloseModal();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to update complaint');
+    }
+  };
+  
 
-  //     if (!response.ok) throw new Error("Failed to update complaint");
+  const handleDelete = async () => {
+    if (!selectedComplaint || !selectedComplaint._id) {
+      alert("Complaint ID is missing");
+      return;
+    }
+  
+    try {
+      // Send the delete request with the valid complaint ID
+      await API.delete(`/complaint/${selectedComplaint._id}`);
+      alert('Complaint deleted successfully!');
+      
+      // Remove the deleted complaint from the local state
+      setFilteredComplaints((prev) =>
+        prev.filter((c) => c._id !== selectedComplaint._id)
+      );
+      handleCloseModal();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to delete complaint');
+    }
+  };
+  
 
-  //     // Update local state for demonstration purposes
-  //     setFilteredComplaints((prev) =>
-  //       prev.map((c) =>
-  //         c.id === selectedComplaint.id ? { ...c, status } : c
-  //       )
-  //     );
-  //     alert("Complaint updated successfully!");
-  //     handleCloseModal();
-  //   } catch (error) {
-  //     console.error("Error updating complaint:", error);
-  //     alert("Failed to update complaint.");
-  //   }
-  // };
-
-  // const handleDelete = async () => {
-  //   // Example API call to delete complaint
-  //   try {
-  //     const response = await fetch(`/api/complaints/${selectedComplaint.id}`, {
-  //       method: "DELETE",
-  //     });
-
-  //     if (!response.ok) throw new Error("Failed to delete complaint");
-
-  //     // Update local state for demonstration purposes
-  //     setFilteredComplaints((prev) =>
-  //       prev.filter((c) => c.id !== selectedComplaint.id)
-  //     );
-  //     alert("Complaint deleted successfully!");
-  //     handleCloseModal();
-  //   } catch (error) {
-  //     console.error("Error deleting complaint:", error);
-  //     alert("Failed to delete complaint.");
-  //   }
-  // };
-  const handleUpdate = () => {
-    handleCloseModal();
-    console.log("Update complaint with id:", selectedComplaint.id);
-  }
-
-  const handleDelete = () => {
-    handleCloseModal();
-    console.log("Delete complaint with id:", selectedComplaint.id);
-  }
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        // Fetch complaints from the backend
+        const { data } = await API.get('/complaint'); // Adjust with correct endpoint
+  
+        // Check if the data is an array, if so, update the state
+        if (Array.isArray(data.data)) {
+          setFilteredComplaints(data.data); // Accessing the 'data' property from the response
+        } else {
+          console.error("Fetched data is not an array", data);
+        }
+      } catch (err) {
+        alert(err.response?.data?.message || 'Failed to fetch complaints');
+      }
+    };
+  
+    fetchComplaints();
+  }, []);
+  
 
   return (
     <div className="min-h-screen bg-gray-300 p-4">
       <h1 className="text-center text-3xl font-bold text-gray-800 mb-6">
         Dashboard
       </h1>
-      <div className="flex justify-end ">
-  <button
-    onClick={handleLogout}
-    className="flex items-center justify-center px-2 py-2 h-10 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition"
-  >
-    <IoLogOut className="mr-2 text-2xl" />
-    Logout
-  </button>
-</div>
-      <div className="mb-2">
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={handleLogout}
+          className="flex items-center justify-center px-4 py-2 h-10 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition"
+        >
+          <IoLogOut className="mr-2 text-2xl" />
+          Logout
+        </button>
+      </div>
+
+      <div className="mb-4">
         <label
           className="block text-md font-medium text-gray-700 mb-2"
           htmlFor="filter"
@@ -120,7 +133,7 @@ function AdminPage() {
           id="filter"
           value={filter}
           onChange={handleFilterChange}
-          className="block w-60 px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-300"
+          className="block w-full sm:w-60 px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-300"
         >
           <option value="">All</option>
           <option value="Low">Low Priority</option>
@@ -129,37 +142,50 @@ function AdminPage() {
         </select>
       </div>
 
-      <table className="w-full bg-white shadow-lg rounded-lg overflow-hidden">
-        <thead className="bg-indigo-600 text-white">
-          <tr>
-            <th className="py-3 px-6 text-left">Title</th>
-            <th className="py-3 px-6 text-left">Category</th>
-            <th className="py-3 px-6 text-left">Priority</th>
-            <th className="py-3 px-6 text-left">Date Submitted</th>
-            <th className="py-3 px-6 text-left">Status</th>
-            <th className="text-left"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredComplaints.map((complaint) => (
-            <tr key={complaint.id} className="border-b">
-              <td className="py-3 px-6">{complaint.title}</td>
-              <td className="py-3 px-6">{complaint.category}</td>
-              <td className="py-3 px-6">{complaint.priority}</td>
-              <td className="py-3 px-6">{complaint.date}</td>
-              <td className="py-3 px-6">{complaint.status}</td>
-              <td className="py-3 px-6">
-              <button
-                  onClick={() => handleViewDetails(complaint)}
-                  className="px-4 py-2 text-sm font-semibold text-white bg-indigo-500 rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  View Details
-                </button>
-              </td>
+      {/* Responsive Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full bg-white shadow-lg rounded-lg overflow-hidden">
+          <thead className="bg-indigo-600 text-white">
+            <tr>
+              <th className="py-3 px-6 text-left">Title</th>
+              <th className="py-3 px-6 text-left">Category</th>
+              <th className="py-3 px-6 text-left">Priority</th>
+              <th className="py-3 px-6 text-left">Date Submitted</th>
+              <th className="py-3 px-6 text-left">Status</th>
+              <th className="text-left"></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {Array.isArray(filteredComplaints) && filteredComplaints.length > 0 ? (
+              filteredComplaints.map((complaint) => (
+                <tr key={complaint._id} className="border-b">
+                  <td className="py-3 px-6">{complaint.title}</td>
+                  <td className="py-3 px-6">{complaint.category}</td>
+                  <td className="py-3 px-6">{complaint.priority}</td>
+                  <td className="py-3 px-6">
+                    {complaint.createdAt ? new Date(complaint.createdAt).toLocaleDateString() : "No date"}
+                  </td>
+                  <td className="py-3 px-6">{complaint.status}</td>
+                  <td className="py-3 px-6">
+                    <button
+                      onClick={() => handleViewDetails(complaint)}
+                      className="px-4 py-2 text-sm font-semibold text-white bg-indigo-500 rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="text-center py-4">
+                  No complaints found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {/* Modal */}
       <Dialog
@@ -199,7 +225,6 @@ function AdminPage() {
                   <option value="Pending">Pending</option>
                   <option value="Resolved">Resolved</option>
                   <option value="InProgress">In Progress</option>
-
                 </select>
               </div>
               <p>

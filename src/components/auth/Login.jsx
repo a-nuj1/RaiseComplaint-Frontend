@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API from '../utils/api.js';
 
 function Login() {
   const navigate = useNavigate();
@@ -8,9 +9,13 @@ function Login() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here, e.g., API call to validate user credentials
-    // If successful, navigate to another page
-    // navigate('/dashboard'); // Redirect to the dashboard or another page
+  try {
+    const { data } = await API.post('/login', { email, password });
+    localStorage.setItem('authToken', data.token);
+    navigate('/'); // Redirect after login
+  } catch (err) {
+    alert(err.response?.data?.message || 'Login failed');
+  }
   };
 
   return (

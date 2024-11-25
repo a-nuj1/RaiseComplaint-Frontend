@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate, Link, useNavigate } from 'react-router-dom';
+import API from '../utils/api.js';
 
 function Signup() {
   const navigate = useNavigate();
@@ -10,7 +11,13 @@ function Signup() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    
+    try {
+      await API.post('/signup', { name, email, password });
+      alert('Signup successful! Please login.');
+      navigate('/login');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Signup failed');
+    }
   };
 
   return (

@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../utils/api";
+import { IoLogOut } from "react-icons/io5"; // Import the logout icon
 
 const Home = () => {
   const navigate = useNavigate();
-
-  // Mock function to check if user is logged in
   const isUserLoggedIn = () => {
-    // Replace this with your actual authentication logic (e.g., checking token in localStorage)
     return localStorage.getItem("authToken") ? true : false;
   };
 
@@ -22,24 +21,37 @@ const Home = () => {
     setComplaint({ ...complaint, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!isUserLoggedIn()) {
-      alert("Please log in to submit a complaint.");
-      navigate("/login");
+      alert('Please log in to submit a complaint.');
+      navigate('/login');
       return;
     }
 
-    console.log("Complaint Submitted:", complaint);
-    // Add backend integration logic here
+    try {
+      const token = localStorage.getItem("authToken");
+      await API.post('/complaint', complaint, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to headers
+        }
+      });
+      alert('Complaint submitted successfully!');
+      setComplaint({
+        title: '',
+        description: '',
+        category: 'Product',
+        priority: 'Low',
+      });
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to submit complaint');
+    }
+  };
 
-    setComplaint({
-      title: "",
-      description: "",
-      category: "Product",
-      priority: "Low",
-    });
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    navigate("/login");
   };
 
   return (
@@ -56,8 +68,8 @@ const Home = () => {
         backdropFilter: "blur(10px)",
       }}
     >
-      <div className="w-full max-w-3xl p-12 bg-white bg-opacity-95 rounded-2xl shadow-2xl ">
-        <h3 className="text-4xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
+      <div className="w-full max-w-3xl p-6 sm:p-12 bg-white bg-opacity-95 rounded-2xl shadow-2xl">
+        <h3 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
           📝 Submit Your Complaint
         </h3>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -134,6 +146,17 @@ const Home = () => {
             Submit Complaint
           </button>
         </form>
+      </div>
+
+      {/* Logout Button */}
+      <div className="absolute top-4 sm:top-2 right-2 sm:right-2">
+        <button
+          onClick={handleLogout}
+          className="flex items-center justify-center px-2 py-2 h-9 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition-all sm:relative sm:top-auto sm:right-auto"
+        >
+          <IoLogOut className="mr-2 text-2xl" />
+          Logout
+        </button>
       </div>
     </main>
   );
