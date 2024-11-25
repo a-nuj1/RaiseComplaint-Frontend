@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { complaints } from "../data/sampleData";
+import { useNavigate } from "react-router-dom";
+import { IoLogOut } from "react-icons/io5";
 
 function AdminPage() {
   const [filter, setFilter] = useState("");
@@ -8,6 +10,13 @@ function AdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [status, setStatus] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAdminAuthenticated');
+    navigate('/admin/login'); 
+  };
 
   const handleFilterChange = (e) => {
     const value = e.target.value;
@@ -91,7 +100,15 @@ function AdminPage() {
       <h1 className="text-center text-3xl font-bold text-gray-800 mb-6">
         Dashboard
       </h1>
-
+      <div className="flex justify-end ">
+  <button
+    onClick={handleLogout}
+    className="flex items-center justify-center px-2 py-2 h-10 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition"
+  >
+    <IoLogOut className="mr-2 text-2xl" />
+    Logout
+  </button>
+</div>
       <div className="mb-2">
         <label
           className="block text-md font-medium text-gray-700 mb-2"
