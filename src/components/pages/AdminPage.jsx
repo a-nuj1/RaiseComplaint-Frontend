@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { IoLogOut } from "react-icons/io5";
-import API from "../utils/api"; 
+import { useNavigate } from "react-router-dom";
+import API from "../utils/api";
 
 function AdminPage() {
   const [filter, setFilter] = useState("");

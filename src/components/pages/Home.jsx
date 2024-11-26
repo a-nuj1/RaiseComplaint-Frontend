@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API from "../utils/api";
 import { FaDirections } from "react-icons/fa";
 import { TbLogout2 } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
+import API from "../utils/api";
 
 const Home = () => {
   const navigate = useNavigate();
