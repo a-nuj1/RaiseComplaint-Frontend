@@ -67,10 +67,10 @@ const Home = () => {
         backdropFilter: "blur(10px)",
       }}
     >
-      <div className="w-full max-w-3xl p-6 sm:p-12 bg-white bg-opacity-95 rounded-2xl shadow-2xl">
-        <h3 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
+      <div className=" max-w-2xl p-5 sm:p-12 bg-white bg-opacity-95 rounded-2xl shadow-2xl">
+        <h4 className="text-3xl sm:text-4xl font-semibold text-gray-800 text-center mb-6 flex items-center justify-center gap-1">
           📝 Submit Your Complaint
-        </h3>
+        </h4>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-lg font-semibold text-gray-700">
