@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../utils/api";
-import { IoLogOut } from "react-icons/io5"; // Import the logout icon
+import { FaDirections } from "react-icons/fa";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -49,11 +49,9 @@ const Home = () => {
     }
   };
 
-    {/* current implemention is not correct  it also deletes the admin tokens */}
-  // const handleLogout = () => {
-  //   localStorage.removeItem("authToken");
-  //   navigate("/login");
-  // };
+  const handleClick = () => {
+    navigate("/login/admin");
+  };
 
   return (
     <main
@@ -150,18 +148,16 @@ const Home = () => {
       </div>
 
 
-              {/* TO DO  */}
               
-      {/* Logout Button */}
-      {/* <div className="absolute top-4 sm:top-2 right-2 sm:right-2">
+      <div className="absolute top-4 sm:top-2 right-2 sm:right-2">
         <button
-          onClick={handleLogout}
+          onClick={handleClick}
           className="flex items-center justify-center px-2 py-2 h-9 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition-all sm:relative sm:top-auto sm:right-auto"
         >
-          <IoLogOut className="mr-2 text-2xl" />
-          Logout
+          <FaDirections className="mr-2 text-2xl" />
+          Admin
         </button>
-      </div> */}
+      </div>
     </main>
   );
 };
