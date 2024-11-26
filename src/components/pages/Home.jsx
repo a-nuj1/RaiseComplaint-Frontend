@@ -50,7 +50,7 @@ const Home = () => {
   };
 
   const handleClick = () => {
-    navigate("/login/admin");
+    navigate("/admin/login");
   };
 
   return (
