@@ -42,10 +42,10 @@ function AdminLogin() {
         </button>
       </form>
 
-      <div className="absolute top-4 sm:top-2 right-2 sm:right-2">
+      <div className="absolute top-4 sm:top-2 left-2 sm:left-2">
         <button
           onClick={()=>navigate('/login')}
-          className="flex items-center justify-center px-2 py-2 h-9 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition-all sm:relative sm:top-auto sm:right-auto"
+          className="flex items-center justify-center px-2 py-2 h-9 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition-all sm:relative sm:top-auto sm:left-auto"
         >
           <FaDirections className="mr-2 text-2xl" />
           Login as User

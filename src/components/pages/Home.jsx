@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../utils/api";
 import { FaDirections } from "react-icons/fa";
+import { TbLogout2 } from "react-icons/tb";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -15,6 +16,11 @@ const Home = () => {
     category: "Product",
     priority: "Low",
   });
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    navigate('/login'); 
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -155,7 +161,17 @@ const Home = () => {
           className="flex items-center justify-center px-2 py-2 h-9 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition-all sm:relative sm:top-auto sm:right-auto"
         >
           <FaDirections className="mr-2 text-2xl" />
-          Admin
+          Login as Admin
+        </button>
+      </div>
+
+      <div className="absolute top-4 sm:top-2 left-2 sm:left-2">
+        <button
+          onClick={handleLogout}
+          className="flex items-center justify-center px-2 py-2 h-9 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition-all sm:relative sm:top-auto sm:left-auto"
+        >
+          <TbLogout2 className="mr-2 text-2xl" />
+          Logout
         </button>
       </div>
     </main>
