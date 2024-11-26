@@ -9,15 +9,12 @@ function AdminLogin() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-
-  
-
-    // Validate the entered key with the environment variable
     const storedAdminKey = import.meta.env.VITE_ADMIN_KEY;
 
     if (adminKey === storedAdminKey) {
-      localStorage.setItem('isAdminAuthenticated', 'true'); // Save authentication status
-      navigate('/admin'); // Redirect to admin dashboard
+      localStorage.setItem('isAdminAuthenticated', 'true'); 
+
+      navigate('/admin'); 
     } else {
       alert('Invalid Admin Pass Key');
     }

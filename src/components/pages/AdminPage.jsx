@@ -15,6 +15,8 @@ function AdminPage() {
 
   const handleLogout = () => {
     localStorage.removeItem('isAdminAuthenticated');
+    localStorage.removeItem('authToken');
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     navigate('/admin/login'); 
   };
 
@@ -198,9 +200,6 @@ function AdminPage() {
                 <strong>Name of User:</strong> {selectedComplaint.user}
               </p>
               <p>
-                <strong>Email:</strong> {selectedComplaint.email}
-              </p>
-              <p>
                 <strong>Title:</strong> {selectedComplaint.title}
               </p>
               <p>
@@ -218,7 +217,6 @@ function AdminPage() {
                 >
                   <option value="Pending">Pending</option>
                   <option value="Resolved">Resolved</option>
-                  <option value="InProgress">In Progress</option>
                 </select>
               </div>
               <p>
