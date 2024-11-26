@@ -51,7 +51,7 @@ function AdminLogin() {
           className="flex items-center justify-center px-2 py-2 h-9 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition-all sm:relative sm:top-auto sm:right-auto"
         >
           <FaDirections className="mr-2 text-2xl" />
-          Admin
+          Login as User
         </button>
       </div>
     </div>
