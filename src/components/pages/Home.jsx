@@ -49,10 +49,11 @@ const Home = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    navigate("/login");
-  };
+    {/* current implemention is not correct  it also deletes the admin tokens */}
+  // const handleLogout = () => {
+  //   localStorage.removeItem("authToken");
+  //   navigate("/login");
+  // };
 
   return (
     <main
@@ -148,8 +149,11 @@ const Home = () => {
         </form>
       </div>
 
+
+              {/* TO DO  */}
+              
       {/* Logout Button */}
-      <div className="absolute top-4 sm:top-2 right-2 sm:right-2">
+      {/* <div className="absolute top-4 sm:top-2 right-2 sm:right-2">
         <button
           onClick={handleLogout}
           className="flex items-center justify-center px-2 py-2 h-9 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition-all sm:relative sm:top-auto sm:right-auto"
@@ -157,7 +161,7 @@ const Home = () => {
           <IoLogOut className="mr-2 text-2xl" />
           Logout
         </button>
-      </div>
+      </div> */}
     </main>
   );
 };

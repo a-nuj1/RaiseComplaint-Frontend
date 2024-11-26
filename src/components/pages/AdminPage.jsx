@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import { IoLogOut } from "react-icons/io5";
-import API from "../utils/api"; // Assuming this is your API utility for making requests
+import API from "../utils/api"; 
 
 function AdminPage() {
   const [filter, setFilter] = useState("");
@@ -47,11 +47,9 @@ function AdminPage() {
     }
   
     try {
-      // Send the update request with the valid complaint ID
       await API.put(`/complaint/${selectedComplaint._id}`, { status });
       alert('Complaint updated successfully!');
       
-      // Update the local state to reflect the change
       setFilteredComplaints((prev) =>
         prev.map((c) =>
           c._id === selectedComplaint._id ? { ...c, status } : c
@@ -71,11 +69,9 @@ function AdminPage() {
     }
   
     try {
-      // Send the delete request with the valid complaint ID
       await API.delete(`/complaint/${selectedComplaint._id}`);
       alert('Complaint deleted successfully!');
       
-      // Remove the deleted complaint from the local state
       setFilteredComplaints((prev) =>
         prev.filter((c) => c._id !== selectedComplaint._id)
       );
@@ -89,12 +85,10 @@ function AdminPage() {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        // Fetch complaints from the backend
-        const { data } = await API.get('/complaint'); // Adjust with correct endpoint
+        const { data } = await API.get('/complaint'); 
   
-        // Check if the data is an array, if so, update the state
         if (Array.isArray(data.data)) {
-          setFilteredComplaints(data.data); // Accessing the 'data' property from the response
+          setFilteredComplaints(data.data);
         } else {
           console.error("Fetched data is not an array", data);
         }

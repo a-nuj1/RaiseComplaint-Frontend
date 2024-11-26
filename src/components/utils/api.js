@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:8000/api', // Change to your backend URL
+  baseURL: 'https://raisecomplaint-backend.onrender.com/api',
 });
 
-// Automatically add token if exists
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('authToken');
   if (token) {
