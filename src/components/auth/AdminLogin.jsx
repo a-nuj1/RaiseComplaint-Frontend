@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaDirections } from "react-icons/fa";
+
 
 function AdminLogin() {
   const [adminKey, setAdminKey] = useState('');
@@ -7,6 +9,8 @@ function AdminLogin() {
 
   const handleLogin = (e) => {
     e.preventDefault();
+
+  
 
     // Validate the entered key with the environment variable
     const storedAdminKey = import.meta.env.VITE_ADMIN_KEY;
@@ -40,6 +44,16 @@ function AdminLogin() {
           Login as Admin
         </button>
       </form>
+
+      <div className="absolute top-4 sm:top-2 right-2 sm:right-2">
+        <button
+          onClick={()=>navigate('/login')}
+          className="flex items-center justify-center px-2 py-2 h-9 text-white font-semibold bg-indigo-700 rounded-lg hover:bg-indigo-800 transition-all sm:relative sm:top-auto sm:right-auto"
+        >
+          <FaDirections className="mr-2 text-2xl" />
+          Admin
+        </button>
+      </div>
     </div>
   );
 }
